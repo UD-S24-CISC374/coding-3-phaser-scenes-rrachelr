@@ -4,6 +4,7 @@ export default class fourthScene extends Phaser.Scene {
     private player: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
+    private music: Phaser.Sound.BaseSound;
     exit: Phaser.GameObjects.Rectangle;
 
     constructor() {
@@ -16,11 +17,15 @@ export default class fourthScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 48,
         });
+        this.load.audio("relax", "assets/relax.mp3");
     }
 
     create(money: Array<number>) {
         const background = this.add.image(700, 350, "home");
         background.setScale(0.8);
+
+        this.music = this.sound.add("relax", { loop: true });
+        this.music.play();
 
         this.player = this.physics.add.sprite(200, 200, "player").setScale(1.5);
         this.player.setCollideWorldBounds(true);
@@ -75,6 +80,7 @@ export default class fourthScene extends Phaser.Scene {
         this.exit = this.add.rectangle(50, 50, 50, 50, 0x000000);
         this.exit.setInteractive().on("pointerdown", () => {
             this.exit.setVisible(false);
+            this.music.pause();
             this.scene.stop("door2").launch("MainScene", money);
         });
     }
