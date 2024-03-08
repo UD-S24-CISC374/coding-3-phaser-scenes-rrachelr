@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class thirdScene extends Phaser.Scene {
+export default class fifthScene extends Phaser.Scene {
     private player: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
@@ -8,11 +8,11 @@ export default class thirdScene extends Phaser.Scene {
     exit: Phaser.GameObjects.Rectangle;
 
     constructor() {
-        super({ key: "door1" });
+        super({ key: "door3" });
     }
 
     preload() {
-        this.load.image("shop", "assets/img/shop.jpg");
+        this.load.image("office", "assets/img/office.jpg");
         this.load.spritesheet("player", "assets/img/dude.png", {
             frameWidth: 32,
             frameHeight: 48,
@@ -20,8 +20,8 @@ export default class thirdScene extends Phaser.Scene {
     }
 
     create(money: Array<number>) {
-        const background = this.add.image(600, 300, "shop");
-        background.setScale(0.7);
+        const background = this.add.image(600, 280, "office");
+        background.setScale(0.4);
 
         this.player = this.physics.add.sprite(200, 200, "player").setScale(1.5);
         this.player.setCollideWorldBounds(true);
@@ -71,27 +71,25 @@ export default class thirdScene extends Phaser.Scene {
             repeat: -1,
         });
 
+        this.add
+            .rectangle(450, 300, 200, 100, 0xff6600)
+            .setInteractive()
+            .on("pointerdown", () => {
+                money[0] = money[0] + 100;
+                this.wallet.setText(`Money: ${money}`);
+            });
+
+        this.add.text(376, 270, "Work", {
+            fontSize: "60px",
+            color: "black",
+        });
+
         this.cursors = this.input.keyboard?.createCursorKeys();
 
         this.exit = this.add.rectangle(50, 50, 50, 50, 0x000000);
         this.exit.setInteractive().on("pointerdown", () => {
             this.exit.setVisible(false);
-            this.scene.stop("door1").launch("MainScene", money);
-        });
-
-        this.add
-            .rectangle(520, 300, 200, 100, 0x73e600)
-            .setInteractive()
-            .on("pointerdown", () => {
-                if(money[0] > 0){
-                    money[0] = money[0] - 50;
-                    this.wallet.setText(`Money: ${money}`);
-                }
-            });
-
-        this.add.text(451, 270, "Shop", {
-            fontSize: "60px",
-            color: "black",
+            this.scene.stop("door3").launch("MainScene", money);
         });
     }
 

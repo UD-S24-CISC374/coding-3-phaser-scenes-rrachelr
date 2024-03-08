@@ -3,14 +3,15 @@ export default class MainScene extends Phaser.Scene {
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
     private player: Phaser.Physics.Arcade.Sprite;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
-    
+
     private instructions: Phaser.GameObjects.Text;
+
 
     constructor() {
         super({ key: "MainScene" });
     }
 
-    create() {
+    create(money: Array<number>) {
         const message = `Phaser v${Phaser.VERSION}`;
         this.add
             .text(this.cameras.main.width - 15, 15, message, {
@@ -66,11 +67,63 @@ export default class MainScene extends Phaser.Scene {
 
         this.cursors = this.input.keyboard?.createCursorKeys();
 
-        this.instructions = this.add.text(16, 16, "Click on a door to go inside!", {
+        this.instructions = this.add.text(
+            16,
+            16,
+            "Click on a door to go inside!",
+            {
+                fontSize: "27px",
+                color: "black",
+            }
+        );
+
+        this.add.text(1000, 16, `Money: ${money}`, {
             fontSize: "27px",
             color: "black",
         });
-    }
+
+        const door1 = this.add
+            .image(126, 530, "door")
+            .setScale(0.3)
+            .setName("door1")
+            .setInteractive().on("pointerdown", () => {
+                this.scene.stop("MainScene").launch(door1.name, money)
+            });
+        const door2 = this.add
+            .image(430, 530, "door")
+            .setScale(0.3)
+            .setName("door2")
+            .setInteractive()
+            .on("pointerdown", () => {
+                this.scene.stop("MainScene").launch(door2.name, money);
+            });
+        const door3 = this.add
+            .image(632, 530, "door")
+            .setScale(0.3)
+            .setName("door3")
+            .setInteractive()
+            .on("pointerdown", () => {
+                this.scene.stop("MainScene").launch(door3.name, money);
+            });
+        const door4 = this.add
+            .image(850, 530, "door")
+            .setScale(0.3);
+        door4.setInteractive().on("pointerdown", () => {
+            this.instructions.setText("This door is locked, try another.");
+        });
+        const door5 = this.add
+            .image(1160, 530, "door")
+            .setScale(0.3);
+        door5.setInteractive().on("pointerdown", () => {
+               this.instructions.setText("This door is locked, try another.");
+        });
+        const door6 = this.add
+            .image(1250, 530, "door")
+            .setScale(0.3);
+        door6.setInteractive().on("pointerdown", () => {
+                this.instructions.setText("This door is locked, try another.");
+            });
+        }
 
     update() {
         if (!this.cursors) {
